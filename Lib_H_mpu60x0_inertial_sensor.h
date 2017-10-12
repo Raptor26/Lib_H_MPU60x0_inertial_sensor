@@ -170,7 +170,7 @@ typedef struct {
     void (*receive) (uint8_t *pRxData, uint16_t cnt);
     void (*sc_ON) (void);
     void (*cs_OFF) (void);
-    void (*delay_1us) (void);
+    void (*delay_1_us) (void);
 } mpu60x0_spi_t; /**    Стуктура содержит указатели на функции, обеспечивающие 
                   *     работу на шине SPI. Должны быть проинициализированы в
                   *     вызывающей функции
@@ -215,10 +215,6 @@ typedef struct {
  *  @brief  Структура содержит значения регистров датчика
  */
 typedef struct {
-    uint8_t gyroFS;
-    uint8_t accelFS;
-    uint8_t i2c_EN;
-    uint8_t spi_EN;
     //  Цифры после нижнего подчеркивания в имени переменной показывают какой регистр 
     //  датчика mpu60x0 будем конфигурировать (см. именованные константы)
     uint8_t dlpf_26; //             Digital low pass filter
@@ -242,7 +238,7 @@ typedef struct {
 
 //******************************************************************************
 // Секция прототипов глобальных функций
-extern void MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
+extern mpu60x0_lsb_t MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
         mpu60x0_regs_t *conf);
 extern mpu60x0_lsb_t MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_t *spi);
 extern void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_t *spi,

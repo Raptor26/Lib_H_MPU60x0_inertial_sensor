@@ -47,10 +47,10 @@ void MPU60x0_SPI_Read_All(mpu60x0_spi_t *spi,
  *  @param  *spi:   Структура, содержащая указатели на функции для работы с шиной SPI
  *  @param  *conf:  Структура, содержащая значени регистров датчика, которые 
  *                  необходимо отправить по шине SPI в инерциальный датчик
- *  @retval None
+ *  @retval Масштабные коэффициенты для нормирования показаний датчика
  *  @see    MPU60x0_WriteDataInReg()
  */
-void MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
+mpu60x0_lsb_t MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
                         mpu60x0_regs_t *conf)
 {
     //  Reg 106
@@ -61,11 +61,11 @@ void MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
     //  Сброс устройства
     MPU60x0_WriteDataInReg(spi, __MPU60x0_SPI_WRITE_FLAG(MPU60x0_REG_PWR_MGMT_1), MPU60x0_BIT_DEVICE_RESET);
 
-    // Ждем в цикле пока не пройдет заданное количество времени
+    //  Ждем в цикле пока не пройдет заданное количество времени
     size_t i = 0;
     for (i = 0; i < 5000; i++)
     {
-        spi->delay_1us();
+        spi->delay_1_us();
     }
 
     //  Reg 106
@@ -92,6 +92,8 @@ void MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
 
     //  Reg 56
     MPU60x0_WriteDataInReg(spi, MPU60x0_REG_INT_ENABLE, conf->int_En_56);
+    
+    return MPU60x0_SPI_GyroAccel_LSB (spi);
 }
 
 /**
@@ -162,11 +164,11 @@ uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_t *spi,
 {
     addr = __MPU60x0_SPI_READ_FLAG(addr);
     spi->sc_ON();
-    spi->delay_1us();
+    spi->delay_1_us();
     spi->transmit(&addr, 1);
     spi->receive(rxArr, cnt);
     spi->cs_OFF();
-    spi->delay_1us();
+    spi->delay_1_us();
     return rxArr++; //  Возвращаем указатель на следующий после крайней записи 
     //                  элемент массива
 }
@@ -289,10 +291,10 @@ void MPU60x0_WriteDataInReg(mpu60x0_spi_t *spi, uint8_t redAddr, uint8_t data)
     uint8_t arr[2] = {__MPU60x0_SPI_WRITE_FLAG(redAddr),
         data};
     spi->sc_ON();
-    spi->delay_1us();
+    spi->delay_1_us();
     spi->transmit(arr, 2);
     spi->cs_OFF();
-    spi->delay_1us();
+    spi->delay_1_us();
 }
 
 void MPU60x0_AccelCalib(float *pArr, float calibMartix[][3])
@@ -332,7 +334,7 @@ void MPU60x0_Data_Convert(float *pTemp, float lsb)
 float MPU60x0_TwoBytesInFloat(uint8_t *pArr)
 {
     int16_t temp = ((((int16_t) (*pArr++) << 8)) & 0xFF00);
-    temp |= ((int16_t) (*pArr)) & 0x00F;
+    temp |= ((int16_t) (*pArr)) & 0x00FF;
     return (float) temp;
 }
 //******************************************************************************
