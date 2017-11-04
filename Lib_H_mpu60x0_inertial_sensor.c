@@ -169,8 +169,12 @@ uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_t *spi,
     spi->receive(rxArr, cnt);
     spi->cs_OFF();
     spi->delay_1_us();
-    return rxArr++; //  Возвращаем указатель на следующий после крайней записи 
-    //                  элемент массива
+    
+    //  Указатель указывает на крайний элемент масисва, в который были записаны данные;
+    rxArr = rxArr + cnt;
+    
+    //  Возвращаем указатель на следующий после крайней записи элемент массива;
+    return rxArr++; 
 }
 
 void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_t *spi,
