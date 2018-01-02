@@ -166,11 +166,11 @@ enum MPU60x0_ARR {
  */
 typedef struct {
     // Указатели на функции для работы с шиной SPI
-    void (*transmit) (uint8_t *pTxData, uint16_t cnt);
-    void (*receive) (uint8_t *pRxData, uint16_t cnt);
-    void (*sc_ON) (void);
-    void (*cs_OFF) (void);
-    void (*delay_1_us) (void);
+    void (*Transmit_8bits) (uint8_t *pTxData, uint16_t cnt);
+    void (*Receive_8bits) (uint8_t *pRxData, uint16_t cnt);
+    void (*CS_On) (void);
+    void (*CS_Off) (void);
+    void (*Delay_1_us) (void);
 } mpu60x0_spi_s; /**    Стуктура содержит указатели на функции, обеспечивающие 
                   *     работу на шине SPI. Должны быть проинициализированы в
                   *     вызывающей функции

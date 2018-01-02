@@ -65,7 +65,7 @@ mpu60x0_lsb_s MPU60x0_SPI_Config(mpu60x0_spi_s *spi,
     size_t i = 0;
     for (i = 0; i < 5000; i++)
     {
-        spi->delay_1_us();
+        spi->Delay_1_us();
     }
 
     //  Reg 106
@@ -163,12 +163,12 @@ uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_s *spi,
                               uint16_t cnt)
 {
     addr = __MPU60x0_SPI_READ_FLAG(addr);
-    spi->sc_ON();
-    spi->delay_1_us();
-    spi->transmit(&addr, 1);
-    spi->receive(rxArr, cnt);
-    spi->cs_OFF();
-    spi->delay_1_us();
+    spi->CS_On();
+    spi->Delay_1_us();
+    spi->Transmit_8bits(&addr, 1);
+    spi->Receive_8bits(rxArr, cnt);
+    spi->CS_Off();
+    spi->Delay_1_us();
     
     //  Указатель указывает на крайний элемент масисва, в который были записаны данные;
     rxArr = rxArr + cnt;
@@ -294,11 +294,11 @@ void MPU60x0_WriteDataInReg(mpu60x0_spi_s *spi, uint8_t redAddr, uint8_t data)
 {
     uint8_t arr[2] = {__MPU60x0_SPI_WRITE_FLAG(redAddr),
         data};
-    spi->sc_ON();
-    spi->delay_1_us();
-    spi->transmit(arr, 2);
-    spi->cs_OFF();
-    spi->delay_1_us();
+    spi->CS_On();
+    spi->Delay_1_us();
+    spi->Transmit_8bits(arr, 2);
+    spi->CS_Off();
+    spi->Delay_1_us();
 }
 
 void MPU60x0_AccelCalib(float *pArr, float calibMartix[][3])
