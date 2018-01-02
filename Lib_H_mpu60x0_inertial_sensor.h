@@ -171,7 +171,7 @@ typedef struct {
     void (*sc_ON) (void);
     void (*cs_OFF) (void);
     void (*delay_1_us) (void);
-} mpu60x0_spi_t; /**    Стуктура содержит указатели на функции, обеспечивающие 
+} mpu60x0_spi_s; /**    Стуктура содержит указатели на функции, обеспечивающие 
                   *     работу на шине SPI. Должны быть проинициализированы в
                   *     вызывающей функции
                   */
@@ -188,7 +188,7 @@ typedef struct {
     float gyrArr[4];
     float accelArr[4];
     float temper;
-} mpu60x0_data_t; /**
+} mpu60x0_data_s; /**
                    *    Структура содержит массив данных гироскопа, массив данных 
                    *    акселерометра и температуру датчика: 
                    *    Нулевой элемент массива равен "0" и не используется.
@@ -206,7 +206,7 @@ typedef struct {
     float gyrLSB_RAD;
     float accelLSB_G;
     float temperature_GRAD;
-} mpu60x0_lsb_t; /**
+} mpu60x0_lsb_s; /**
                   *     Стуктура содержит масштабные коэффициенты для перевода 
                   *     "сырых" показаний датчика в определенные величины
                   */
@@ -225,7 +225,7 @@ typedef struct {
     uint8_t int_En_56; //           Interrupt Enable
     uint8_t int_status_58; //       Interrupt status
     uint8_t pwr_managment_107; //   Power Managment 1
-} mpu60x0_regs_t; /**
+} mpu60x0_regs_s; /**
                    *    Структура содержит значения регистров датчика
                    */
 //******************************************************************************
@@ -238,18 +238,18 @@ typedef struct {
 
 //******************************************************************************
 // Секция прототипов глобальных функций
-extern mpu60x0_lsb_t MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
-        mpu60x0_regs_t *conf);
-extern mpu60x0_lsb_t MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_t *spi);
-extern void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_t *spi,
+extern mpu60x0_lsb_s MPU60x0_SPI_Config(mpu60x0_spi_s *spi,
+        mpu60x0_regs_s *conf);
+extern mpu60x0_lsb_s MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_s *spi);
+extern void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_s *spi,
         float *pGyr);
-extern void MPU60x0_SPI_Read_Accel(mpu60x0_spi_t *spi,
+extern void MPU60x0_SPI_Read_Accel(mpu60x0_spi_s *spi,
         float *pAccel);
 extern void MPU60x0_Data_Convert(float *pTemp,
         float lsb);
-extern void MPU60x0_SPI_GetAllNormData(mpu60x0_spi_t *spi,
-        mpu60x0_data_t *data,
-        mpu60x0_lsb_t *lsb);
+extern void MPU60x0_SPI_GetAllNormData(mpu60x0_spi_s *spi,
+        mpu60x0_data_s *data,
+        mpu60x0_lsb_s *lsb);
 extern void MPU60x0_AccelCalib(float *pArr,
         float calibMartix[][3]);
 //******************************************************************************

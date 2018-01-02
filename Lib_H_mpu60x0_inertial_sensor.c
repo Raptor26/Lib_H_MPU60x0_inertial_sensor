@@ -26,15 +26,15 @@
 //******************************************************************************
 // Секция прототипов локальных функций
 float MPU60x0_TwoBytesInFloat(uint8_t *pArr);
-void MPU60x0_WriteDataInReg(mpu60x0_spi_t *spi,
+void MPU60x0_WriteDataInReg(mpu60x0_spi_s *spi,
                             uint8_t redAddr,
                             uint8_t data);
-uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_t *spi,
+uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_s *spi,
                               uint8_t addr,
                               uint8_t *rxArr,
                               uint16_t cnt);
-void MPU60x0_SPI_Read_All(mpu60x0_spi_t *spi,
-                          mpu60x0_data_t *data);
+void MPU60x0_SPI_Read_All(mpu60x0_spi_s *spi,
+                          mpu60x0_data_s *data);
 //******************************************************************************
 
 
@@ -50,8 +50,8 @@ void MPU60x0_SPI_Read_All(mpu60x0_spi_t *spi,
  *  @retval Масштабные коэффициенты для нормирования показаний датчика
  *  @see    MPU60x0_WriteDataInReg()
  */
-mpu60x0_lsb_t MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
-                        mpu60x0_regs_t *conf)
+mpu60x0_lsb_s MPU60x0_SPI_Config(mpu60x0_spi_s *spi,
+                        mpu60x0_regs_s *conf)
 {
     //  Reg 106
     //  Отключение модуля I2C (иначе SPI не будет работать))
@@ -109,9 +109,9 @@ mpu60x0_lsb_t MPU60x0_SPI_Config(mpu60x0_spi_t *spi,
  *  @see    MPU60x0_SPI_Read_All()
  *  @see    MPU60x0_Data_Convert()
  */
-void MPU60x0_SPI_GetAllNormData(mpu60x0_spi_t *spi,
-                                mpu60x0_data_t *data,
-                                mpu60x0_lsb_t *lsb)
+void MPU60x0_SPI_GetAllNormData(mpu60x0_spi_s *spi,
+                                mpu60x0_data_s *data,
+                                mpu60x0_lsb_s *lsb)
 {
     MPU60x0_SPI_Read_All(spi, data);
     MPU60x0_Data_Convert(data->gyrArr, lsb->gyrLSB_RAD);
@@ -130,7 +130,7 @@ void MPU60x0_SPI_GetAllNormData(mpu60x0_spi_t *spi,
  *  @retval None
  *  @see    MPU60x0_SPI_ReadData()
  */
-void MPU60x0_SPI_Read_All(mpu60x0_spi_t *spi, mpu60x0_data_t *data)
+void MPU60x0_SPI_Read_All(mpu60x0_spi_s *spi, mpu60x0_data_s *data)
 {
     uint8_t rxArr[14];
 
@@ -157,7 +157,7 @@ void MPU60x0_SPI_Read_All(mpu60x0_spi_t *spi, mpu60x0_data_t *data)
  *  @param  cnt:    Количество байт которое необходимо прочитать из датчика
  *  @retval Указатель на элемент массива, следующий после того в который была произведена крайняя запись
  */
-uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_t *spi,
+uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_s *spi,
                               uint8_t addr,
                               uint8_t *rxArr,
                               uint16_t cnt)
@@ -177,7 +177,7 @@ uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_t *spi,
     return rxArr++; 
 }
 
-void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_t *spi,
+void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_s *spi,
                           float *pGyr)
 {
     uint8_t gyrArr[6];
@@ -194,7 +194,7 @@ void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_t *spi,
     *++pGyr = MPU60x0_TwoBytesInFloat(&gyrArr[4]);
 }
 
-void MPU60x0_SPI_Read_Accel(mpu60x0_spi_t *spi,
+void MPU60x0_SPI_Read_Accel(mpu60x0_spi_s *spi,
                             float *pAccel)
 {
     uint8_t accelArr[6];
@@ -208,7 +208,7 @@ void MPU60x0_SPI_Read_Accel(mpu60x0_spi_t *spi,
     *++pAccel = MPU60x0_TwoBytesInFloat(&accelArr[4]);
 }
 
-void MPU60x0_SPI_Read_Temp(mpu60x0_spi_t *spi,
+void MPU60x0_SPI_Read_Temp(mpu60x0_spi_s *spi,
                            float *pTemp)
 {
     uint8_t tempArr[2];
@@ -226,9 +226,9 @@ void MPU60x0_SPI_Read_Temp(mpu60x0_spi_t *spi,
  *                  работы с шиной SPI
  *  @retval Структура, содержащая актуальные масштабные коэффициенты акселерометра и гироскопа
  */
-mpu60x0_lsb_t MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_t *spi)
+mpu60x0_lsb_s MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_s *spi)
 {
-    mpu60x0_lsb_t lsb;
+    mpu60x0_lsb_s lsb;
     uint8_t tempLSB = 0;
 
     //  Чтение масштабного коэффициента гироскопа
@@ -290,7 +290,7 @@ mpu60x0_lsb_t MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_t *spi)
  *  @param  data:   Байт данны, который будет записан по указанному адресу
  *  @retval None
  */
-void MPU60x0_WriteDataInReg(mpu60x0_spi_t *spi, uint8_t redAddr, uint8_t data)
+void MPU60x0_WriteDataInReg(mpu60x0_spi_s *spi, uint8_t redAddr, uint8_t data)
 {
     uint8_t arr[2] = {__MPU60x0_SPI_WRITE_FLAG(redAddr),
         data};
