@@ -55,11 +55,11 @@ mpu60x0_lsb_s MPU60x0_SPI_Config(mpu60x0_spi_s *spi,
 {
     //  Reg 106
     //  Отключение модуля I2C (иначе SPI не будет работать))
-    MPU60x0_WriteDataInReg(spi, __MPU60x0_SPI_WRITE_FLAG(MPU60x0_REG_USER_CTRL), MPU60x0_BIT_I2C_IF_DIS);
+    MPU60x0_WriteDataInReg(spi, __MPU60x0_SPI_SET_WRITE_FLAG(MPU60x0_REG_USER_CTRL), MPU60x0_BIT_I2C_IF_DIS);
 
     //  Reg 107
     //  Сброс устройства
-    MPU60x0_WriteDataInReg(spi, __MPU60x0_SPI_WRITE_FLAG(MPU60x0_REG_PWR_MGMT_1), MPU60x0_BIT_DEVICE_RESET);
+    MPU60x0_WriteDataInReg(spi, __MPU60x0_SPI_SET_WRITE_FLAG(MPU60x0_REG_PWR_MGMT_1), MPU60x0_BIT_DEVICE_RESET);
 
     //  Ждем в цикле пока не пройдет заданное количество времени
     size_t i = 0;
@@ -164,7 +164,7 @@ uint8_t* MPU60x0_SPI_ReadData(mpu60x0_spi_s *spi,
                               uint8_t *rxArr,
                               uint16_t cnt)
 {
-    addr = __MPU60x0_SPI_READ_FLAG(addr);
+    addr = __MPU60x0_SPI_SET_READ_FLAG(addr);
     spi->CS_On();
     spi->Delay_1_us();
     spi->Transmit_8bits(&addr, 1);
@@ -186,7 +186,7 @@ void MPU60x0_SPI_Read_Gyr(mpu60x0_spi_s *spi,
 
     //  Выполняем чтение данных инерциального датчика
     MPU60x0_SPI_ReadData(spi,
-                         __MPU60x0_SPI_READ_FLAG(MPU60x0_REG_GYRO_XOUT_H),
+                         __MPU60x0_SPI_SET_READ_FLAG(MPU60x0_REG_GYRO_XOUT_H),
                          gyrArr,
                          6);
 
@@ -297,7 +297,7 @@ mpu60x0_lsb_s MPU60x0_SPI_GyroAccel_LSB(mpu60x0_spi_s *spi)
  */
 void MPU60x0_WriteDataInReg(mpu60x0_spi_s *spi, uint8_t redAddr, uint8_t data)
 {
-    uint8_t arr[2] = {__MPU60x0_SPI_WRITE_FLAG(redAddr),
+    uint8_t arr[2] = {__MPU60x0_SPI_SET_WRITE_FLAG(redAddr),
         data};
     spi->CS_On();
     spi->Delay_1_us();

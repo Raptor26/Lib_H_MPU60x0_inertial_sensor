@@ -63,10 +63,10 @@
 #define MPU60x0_ACCEL_LSB_16G                       2048
 
 //  Gyro LSB
-#define MPU60x0_GYRO_LSB_250                        131
-#define MPU60x0_GYRO_LSB_500                        65.5
-#define MPU60x0_GYRO_LSB_1000                       32.8
-#define MPU60x0_GYRO_LSB_2000                       16.4
+#define MPU60x0_GYRO_LSB_250                        ((float)131.0f)
+#define MPU60x0_GYRO_LSB_500                        ((float)65.5f)
+#define MPU60x0_GYRO_LSB_1000                       ((float)32.8f)
+#define MPU60x0_GYRO_LSB_2000                       ((float)16.4f)
 
 #define MPU60x0_LSB_MASK                            0b00011000
 //------------------------------------------------------------------------------
@@ -355,8 +355,8 @@ extern void MPU60x0_AccelCalib(float *pArr,
 
 //******************************************************************************
 // Секция определения макросов
-#define __MPU60x0_SPI_READ_FLAG(__x__)      (__x__ | 0x80)
-#define __MPU60x0_SPI_WRITE_FLAG(__x__)     (__x__ & 0x7F)
+#define __MPU60x0_SPI_SET_READ_FLAG(__x__)      ((__x__) | (0x80))
+#define __MPU60x0_SPI_SET_WRITE_FLAG(__x__)     ((__x__) & (0x7F))
 //******************************************************************************
 
 #endif
